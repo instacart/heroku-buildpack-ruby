@@ -30,7 +30,7 @@ class LanguagePack::Rails4 < LanguagePack::Rails3
     end
   end
 
-  def build_bundler
+  def build_bundler(default_bundle_without)
     instrument "rails4.build_bundler" do
       super
     end
@@ -64,6 +64,13 @@ WARNING
 
   def default_assets_cache
     "tmp/cache/assets"
+  end
+
+  def cleanup
+    super
+    return if assets_compile_enabled?
+    return unless Dir.exist?(default_assets_cache)
+    FileUtils.remove_dir(default_assets_cache)
   end
 
   def run_assets_precompile_rake_task
