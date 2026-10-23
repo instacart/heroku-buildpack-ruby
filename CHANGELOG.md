@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Default Node.js version now 24.22.1 (CVE-2026-111497)
+
 
 ## [v349] - 2026-03-06
 
