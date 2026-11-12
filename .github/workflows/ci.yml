@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -42,15 +42,22 @@ jobs:
         PARALLEL_SPLIT_TEST_PROCESSES: 85
         RSPEC_RETRY_RETRY_COUNT: 1
       steps:
+        - name: Explain skipped integration tests
+          if: ${{ env.HEROKU_API_KEY == '' || env.HEROKU_API_USER == '' }}
+          run: echo '::notice::Skipping Hatchet integration tests because Heroku credentials are not configured; upstream runs this suite.'
         - name: Checkout
+          if: ${{ env.HEROKU_API_KEY != '' && env.HEROKU_API_USER != '' }}
           uses: actions/checkout@v6
         - name: Install Ruby and dependencies
+          if: ${{ env.HEROKU_API_KEY != '' && env.HEROKU_API_USER != '' }}
           uses: ruby/setup-ruby@v1
           with:
             bundler-cache: true
             ruby-version: "3.3.9"
         - name: Hatchet setup
+          if: ${{ env.HEROKU_API_KEY != '' && env.HEROKU_API_USER != '' }}
           run: bundle exec hatchet ci:setup
         - name: Run Hatchet integration tests
+          if: ${{ env.HEROKU_API_KEY != '' && env.HEROKU_API_USER != '' }}
           # parallel_split_test runs rspec in parallel, with concurrency equal to PARALLEL_SPLIT_TEST_PROCESSES.
           run: bundle exec parallel_split_test spec/
