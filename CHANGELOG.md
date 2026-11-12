@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Default Node.js version updated to 24.22.1 (VULN-1619).
 
 ## [v349] - 2026-03-06
 
